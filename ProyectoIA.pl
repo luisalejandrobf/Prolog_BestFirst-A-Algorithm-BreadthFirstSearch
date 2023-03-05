@@ -23,3 +23,9 @@ objetivo(robot, h2).
 objetivo(caja(roja), h1).
 
 % Definicion de reglas
+
+% Mover el robot de una habitacion a otra
+mover_robot(habitacionActual, habitacionDestino) :-
+conexion(habitacionDestino, habitacionActual),
+asserta(ubicacion_inicial(robot, habitacionDestino)),
+ubicacion_inicial(robot, habitacionDestino).
