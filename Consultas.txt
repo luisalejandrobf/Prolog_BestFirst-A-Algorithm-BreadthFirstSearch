@@ -1,0 +1,3 @@
+Consultas de ejemplo para el proyecto...
+
+likes(john, mary).
