@@ -17,3 +17,8 @@ Para revisar la ubicacion del robot y las cajas despues de resolver...
 -> ubicacion(robot, L).
 -> ubicacion(caja(azul), L).
 -> ubicacion(caja(roja), L).
+
+Para correr el programa que hace uso de la heuristica, y se mueve de habitacion en habitacion de forma generalizada,
+utilizar -> resolver.
+
+En caso de querer hacer mas consultas, poner . despues de true, y posteriormente escribirlas.
