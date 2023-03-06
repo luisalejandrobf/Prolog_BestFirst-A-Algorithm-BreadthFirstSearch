@@ -1,3 +1,19 @@
+Luis Bravo, Camilo Garcia, Fabio Buitrago
 Consultas de ejemplo para el proyecto...
 
-likes(john, mary).
+Para ejecutar el proyecto, swipl ProyectoIA.pl en el directorio del mismo. Instalar previamente swipl
+
+Para consultar la ubicacion de un objeto: ubicacion(objeto, L). (Objeto debe ser cambiado al nombre del objeto a consultar)
+Por ejemplo, para realizar los movimientos necesarios para mover las cajas y que queden en el orden deseado...
+-> mover(caja(azul), h1, h2).
+-> mover(robot, h1, h2).
+
+Para recoger una caja utilizando el robot (Solo puede tener una a la vez): recoger(robot, caja(azul)).
+Para soltar la caja, se usa el comando soltar: soltar(robot, caja(azul)).
+Sin importar los movimientos realizados por el robot, la ubicacion de la caja coincidira despues de soltarla.
+
+Para probar el metodo de resolucion -> resolver.
+Para revisar la ubicacion del robot y las cajas despues de resolver...
+-> ubicacion(robot, L).
+-> ubicacion(caja(azul), L).
+-> ubicacion(caja(roja), L).
