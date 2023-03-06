@@ -72,7 +72,7 @@ heuristica(HabitacionInicial, Solucion, Tam) :-
 	length(Solucion1, Tam).
 
 % Se realiza la busqueda en anchura del grafo. Por llamada se toma el primer camino de la lista y se extiende para agregar a la lista de caminos sin visitar
-% Recursivamente se llama la funcion con la nueva lista generada.
+% Recursivamente se llama la funcion con la nueva lista generada, hasta alcanzar el nodo meta.
 busquedaEnAnchura( [ [Nodo | Camino] | _], [Nodo | Camino])  :-
   goal(Nodo).
 
@@ -83,7 +83,8 @@ busquedaEnAnchura( [Camino | Caminos], Solucion)  :-
   
 % Se utiliza para extender el camino. Con ! Prolog intenta evitar que el backtracking continue para buscar otras soluciones para el predicado actual y busca una solución única (Evitar caminos repetidos)
 % Bagof sirve para obtener todas las posibles soluciones que satisfacen
-% Member se utiliza para verificar si un elemento está presente en una lista
+% Member se utiliza para verificar si un elemento está presente en una lista. Para evitar duplicados.
+% El bagof se usa para meter los posibles caminos en NuevosCaminos. Cada camino dentro de la lista tiene una tupla (NuevoNodo, Nodo), y quedan el resto de elementos que conforman el camino.
 extend( [Nodo | Camino], NuevosCaminos)  :-
   bagof( [NuevoNodo, Nodo | Camino],
          ( conexion( Nodo, NuevoNodo), \+ member( NuevoNodo, [Nodo | Camino] ) ),
@@ -130,6 +131,8 @@ resolver_heuristica_recursivo(Habitacion, Solucion) :-
         mover(robot, L, SiguienteHab),
         resolver_heuristica_recursivo(SiguienteHab, SolucionAux)
     ).
+
+% Sin importar la funcion utilizada, la meta siempre se considera al estar atada a la heuristica.
 
 
 

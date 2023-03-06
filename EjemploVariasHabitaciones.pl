@@ -8,12 +8,15 @@ habitacion(h2).
 habitacion(h3).
 habitacion(h4).
 habitacion(h5).
+habitacion(h6).
+habitacion(h7).
 conexion(h1, h2).
 conexion(h2, h1).
 conexion(h2, h3).
 conexion(h3, h4).
 conexion(h3, h5).
-conexion(h4, h5).
+conexion(h5, h7).
+conexion(h7, h6).
 
 % Se definen las cajas de colores.
 caja(azul).
@@ -79,7 +82,7 @@ heuristica(HabitacionInicial, Solucion, Tam) :-
 	length(Solucion1, Tam).
 
 % Se realiza la busqueda en anchura del grafo. Por llamada se toma el primer camino de la lista y se extiende para agregar a la lista de caminos sin visitar
-% Recursivamente se llama la funcion con la nueva lista generada.
+% Recursivamente se llama la funcion con la nueva lista generada, hasta alcanzar el nodo meta.
 busquedaEnAnchura( [ [Nodo | Camino] | _], [Nodo | Camino])  :-
   goal(Nodo).
 
@@ -90,7 +93,8 @@ busquedaEnAnchura( [Camino | Caminos], Solucion)  :-
   
 % Se utiliza para extender el camino. Con ! Prolog intenta evitar que el backtracking continue para buscar otras soluciones para el predicado actual y busca una solución única (Evitar caminos repetidos)
 % Bagof sirve para obtener todas las posibles soluciones que satisfacen
-% Member se utiliza para verificar si un elemento está presente en una lista
+% Member se utiliza para verificar si un elemento está presente en una lista. Para evitar duplicados.
+% El bagof se usa para meter los posibles caminos en NuevosCaminos. Cada camino dentro de la lista tiene una tupla (NuevoNodo, Nodo), y quedan el resto de elementos que conforman el camino.
 extend( [Nodo | Camino], NuevosCaminos)  :-
   bagof( [NuevoNodo, Nodo | Camino],
          ( conexion( Nodo, NuevoNodo), \+ member( NuevoNodo, [Nodo | Camino] ) ),
@@ -99,7 +103,7 @@ extend( [Nodo | Camino], NuevosCaminos)  :-
 
 % Se Define la Meta a la cual se debe llegar (Nodo final)
 extend( Camino, [] ).
-goal(h5).
+goal(h7).
 
 % Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
 % findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
@@ -136,6 +140,8 @@ resolver_heuristica_recursivo(Habitacion, Solucion) :-
         mover(robot, L, SiguienteHab),
         resolver_heuristica_recursivo(SiguienteHab, SolucionAux)
     ).
+
+% Sin importar la funcion utilizada, la meta siempre se considera al estar atada a la heuristica.
 
 
 
