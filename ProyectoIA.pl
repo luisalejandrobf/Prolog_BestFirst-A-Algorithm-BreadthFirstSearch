@@ -68,11 +68,13 @@ assertz(ubicacion(Caja, UbicacionRobot)).
 
 
 
-
-
 % Resolver el problema. Se recoge La caja azul en h1, y se lleva a h2.
 % Al final, la caja azul y el robot quedan en H2, mientras la caja roja se mantiene en H1.
 resolver :-
 recoger(robot, caja(azul)),
 mover(robot, h1, h2),
 soltar(robot, caja(azul)).
+
+
+
+% Heuristica tiene que ser la cantidad de habitaciones a recorrer antes de llegar al destino.
