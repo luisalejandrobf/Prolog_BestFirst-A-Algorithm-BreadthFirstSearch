@@ -5,8 +5,15 @@
 % Se definen las conexiones entre las habitaciones h1 y h2.
 habitacion(h1).
 habitacion(h2).
+habitacion(h3).
+habitacion(h4).
+habitacion(h5).
 conexion(h1, h2).
 conexion(h2, h1).
+conexion(h2, h3).
+conexion(h3, h4).
+conexion(h3, h5).
+conexion(h4, h5).
 
 % Se definen las cajas de colores.
 caja(azul).
@@ -92,7 +99,7 @@ extend( [Nodo | Camino], NuevosCaminos)  :-
 
 % Se Define la Meta a la cual se debe llegar (Nodo final)
 extend( Camino, [] ).
-goal(h2).
+goal(h5).
 
 % Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
 % findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
@@ -108,14 +115,13 @@ habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom)
 % Se construye ListaHab para generar las soluciones (Tuplas: Habitacion, Heuristica), con findall, esto para las habitaciones siguientes con heuristica H.
 % Se ordena la lista de habitaciones y se selecciona la de menor heuristica en orden ascendente (@=<). Se usa 2, porque la heuristica es el segundo elemento de la tupla.
 % _ significa "cualquier cosa" en Prolog
-% | Se utiliza para separar la cabeza y cola de la lista. [SiguienteHab, _] Se utiliza para indicar la TUPLA. Una habitacion, seguida de cualquier cosa. En este caso el valor heuristico.
 conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
     findall([Siguiente, H], (conexion(Habitacion, Siguiente), heuristica(Siguiente, _, H)), ListaHab),
     sort(2, @=<, ListaHab, [[SiguienteHab, _] | _]).
 
 % Se encarga de buscar la habitacion de la minima heuristica, para posteriormente, de manera recursiva, mover el robot habitacion tras habitacion.
 resolver_heuristica :-
-    habitacionDeMinimaHeuristica([h1,h2], h1, Solucion, MinRoom),
+    habitacionDeMinimaHeuristica([h1,h2,h3,h4,h5], h1, Solucion, MinRoom),
     resolver_heuristica_recursivo(MinRoom, Solucion).
 
 resolver_heuristica_recursivo(Habitacion, Solucion) :-
