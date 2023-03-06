@@ -5,8 +5,16 @@
 % Se definen las conexiones entre las habitaciones h1 y h2.
 habitacion(h1).
 habitacion(h2).
+% habitacion(h3).
+% habitacion(h4).
+% habitacion(h5).
 conexion(h1, h2).
 conexion(h2, h1).
+% conexion(h2, h5).
+% conexion(h2, h3).
+% conexion(h3, h4).
+% conexion(h3, h5).
+% conexion(h4, h5).
 
 % Se definen las cajas de colores.
 caja(azul).
@@ -37,7 +45,6 @@ ubicacion(caja(azul), h2),
 ubicacion(robot, h2),
 ubicacion(caja(roja), h1).
 
-
 % Mover objeto de una habitacion a otra (Puede ser el robot, o las cajas).
 % Se debe verificar que la conexion de una habitacion a otra existe, para posteriormente retirar de la base de hechos dinamica el objeto de la primera habitacion y agregarla a la segunda.
 mover(ObjetoAMover, HabitacionActual, HabitacionFinal) :-
@@ -66,15 +73,82 @@ retract(ubicacion(Caja, Robot)),
 ubicacion(Robot, UbicacionRobot),
 assertz(ubicacion(Caja, UbicacionRobot)).
 
+% Heuristica: Cantidad de habitaciones a recorrer antes de llegar al destino.
+heuristica(HabitacionInicial, Solucion, Tam) :-
+    busquedaEnAnchura([[HabitacionInicial]], Solucion1),
+    reverse(Solucion1, Solucion),
+	length(Solucion1, Tam).
+
+% Se realiza la busqueda en anchura del grafo. Por llamada se toma el primer camino de la lista y se extiende para agregar a la lista de caminos sin visitar
+% Recursivamente se llama la funcion con la nueva lista generada.
+busquedaEnAnchura( [ [Nodo | Camino] | _], [Nodo | Camino])  :-
+  goal(Nodo).
+
+busquedaEnAnchura( [Camino | Paths], Solucion)  :-
+  extend( Camino, Caminos),
+  append( Caminos, Caminos, Caminos1),
+  busquedaEnAnchura( Caminos1, Solucion).
+
+% Se utiliza para extender el camino. Con ! Prolog intenta evitar que el backtracking continue para buscar otras soluciones para el predicado actual y busca una solución única (Evitar caminos repetidos)
+% Bagof sirve para obtener todas las posibles soluciones que satisfacen
+% Member se utiliza para verificar si un elemento está presente en una lista
+extend( [Nodo | Camino], Caminos)  :-
+  bagof( [NuevoNodo, Nodo | Camino],
+         ( conexion( Nodo, NuevoNodo), \+ member( NuevoNodo, [Nodo | Camino] ) ),
+         Caminos),
+  !.
+
+% Se Define la Meta a la cual se debe llegar (Nodo final)
+extend( Camino, [] ).
+goal(h2).
+% goal(h5).
+
+% Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
+% findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
+% keysort se utiliza para ordenar la lista por clave (El valor de la heuristica). Se selecciona la primera habitacion.
+habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom) :-
+    findall(Tam-Habitacion, (
+        member(Habitacion, Habitaciones),
+        heuristica(HabitacionInicial, Solucion, Tam)
+    ), ListaHab),
+    keysort(ListaHab, [MinValue-MinRoom | _]).
+
+% Consigue la siguiente habitacion a la cual proceder, segun la heuristica.
+% Se construye ListaHab para generar las soluciones (Tuplas: Habitacion, Heuristica), con findall, esto para las habitaciones siguientes con heuristica H.
+% Se ordena la lista de habitaciones y se selecciona la de menor heuristica en orden ascendente (@=<). Se usa 2, porque la heuristica es el segundo elemento de la tupla.
+% _ significa "cualquier cosa" en Prolog
+conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
+    findall([Siguiente, H], (conexion(Habitacion, Siguiente), heuristica(Siguiente, _, H)), ListaHab),
+    sort(2, @=<, ListaHab, [[SiguienteHab, _] | _]).
+
+% Se encarga de buscar la habitacion de la minima heuristica, para posteriormente, de manera recursiva, mover el robot habitacion tras habitacion.
+resolver_heuristica :-
+    habitacionDeMinimaHeuristica([h1,h2,h3], h1, Solucion, MinRoom),
+    resolver_heuristica_recursivo(MinRoom, Solucion).
+
+resolver_heuristica_recursivo(Habitacion, Solucion) :-
+    heuristica(Habitacion, Solucion, Heuristica),
+    (Heuristica =:= 1 ->
+        writeln("Llegamos al destino! " + Habitacion),
+        true
+    ;
+		writeln("NO Hemos llegado al destino (Actualmente en " + Habitacion + ")..."),
+        conseguirSiguienteHabitacion(Habitacion, SiguienteHab),
+        ubicacion(robot, L),
+        mover(robot, L, SiguienteHab),
+        resolver_heuristica_recursivo(SiguienteHab, SolucionAux)
+    ).
 
 
-% Resolver el problema. Se recoge La caja azul en h1, y se lleva a h2.
+
+% Se encarga de resolver el problema. Se recoge La caja azul en h1, y se lleva a h2.
 % Al final, la caja azul y el robot quedan en H2, mientras la caja roja se mantiene en H1.
+% Recoge la caja al inicio, y realiza el recorrido haciendo uso de resolver_heuristica, que mueve al robot haciendo uso de la ruta construida mediante la funcion heuristica.
 resolver :-
+writeln("Luis Bravo, Camilo Garcia, Fabio Buitrago. Proyecto 1 IIA. Prolog"),
+writeln("La caja azul se encuentra incialmente en H1. El robot la recoge y se mueve a h2."),
 recoger(robot, caja(azul)),
-mover(robot, h1, h2),
-soltar(robot, caja(azul)).
-
-
-
-% Heuristica tiene que ser la cantidad de habitaciones a recorrer antes de llegar al destino.
+resolver_heuristica,
+soltar(robot, caja(azul)),
+ubicacion(caja(azul), L),
+writeln("Tras soltar la caja, estando en h2, la ubicacion de la caja azul es " +L).
