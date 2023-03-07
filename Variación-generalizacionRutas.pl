@@ -32,11 +32,16 @@ ubicacion_inicial(caja(roja), h1).
 
 
 % Se definen HECHOS DINAMICOS que pueden modificarse en la ejecucion mediante assert y retract.
-% Se utiliza el 2, para indicar que hay 2 argumentos. Ademas, assertz, asserta y retract solo pueden usarse dentro de reglas.
+% Se utiliza el 2, para indicar que hay 2 argumentos. En el caso de que solo sea 1, se usa 1. Ademas, assertz, asserta y retract solo pueden usarse dentro de reglas.
 % Sin embargo, se pueden inicializar datos.
 :- dynamic ubicacion/2.
+ubicacion(robot, h1).
+ubicacion(caja(azul), h1).
+ubicacion(caja(roja), h1).
 
 :- dynamic goal/1.
+
+
 
 % DEFINICION DE REGLAS
 
@@ -107,18 +112,18 @@ extend( [Nodo | Camino], NuevosCaminos)  :-
   ),
   !.
 
-% Se Define la Meta a la cual se debe llegar (Nodo final)
+% Se Define la Meta a la cual se debe llegar (Nodo final). Solo se utiliza en caso de que la misma no se establezca de forma dinamica.
 extend( Camino, [] ).
 
 % Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
 % findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
 % keysort se utiliza para ordenar la lista por clave (El valor de la heuristica). Se selecciona la primera habitacion.
-habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom) :-
+habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, HabMinima) :-
     findall(Tam-Habitacion, (
         member(Habitacion, Habitaciones),
         heuristica(HabitacionInicial, Solucion, Tam)
     ), ListaHab),
-    keysort(ListaHab, [MinValue-MinRoom | _]).
+    keysort(ListaHab, [ValorMinimo-HabMinima | _]).
 
 % Consigue la siguiente habitacion a la cual proceder, segun la heuristica.
 % Se construye ListaHab para generar las soluciones (Tuplas: Habitacion, Heuristica), con findall, esto para las habitaciones siguientes con heuristica H.
@@ -130,17 +135,18 @@ conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
     sort(2, @=<, ListaHab, [[SiguienteHab, _] | _]).
 
 % Se encarga de buscar la habitacion de la minima heuristica, para posteriormente, de manera recursiva, mover el robot habitacion tras habitacion.
-resolver_heuristica(ValorAnterior,Inicio, Fin):-
+% El codigo se ejecuta de manera recursiva hasta que la meta es alcanzada.
+resolver_heuristica(Inicio, Fin):-
     retractall(goal(_)),
     assertz(goal(Fin)),
-    habitacionDeMinimaHeuristica([h1,h2,h3,h4,h5,h6,h7], Inicio, Solucion, MinRoom),
-    resolver_heuristica_recursivo(MinRoom, Solucion).
+    habitacionDeMinimaHeuristica([h1,h2,h3,h4,h5,h6,h7], Inicio, Solucion, HabMinima),
+    resolver_heuristica_recursivo(HabMinima, Solucion).
 
 resolver_heuristica_recursivo(Habitacion, Solucion) :-
     ubicacion(robot,X),
     goal(W),
     heuristica(Habitacion, Solucion, Heuristica),
-    writeln("LA HEURISTICA ES: " + Solucion),
+    writeln("LA RUTA SIGUIENDO LA HEURISTICA ES: " + Solucion),
     (W = X ->
         ubicacion(robot,U),
         writeln("Llegamos al destino! " + U),
@@ -154,13 +160,14 @@ resolver_heuristica_recursivo(Habitacion, Solucion) :-
         resolver_heuristica_recursivo(SiguienteHab, SolucionAux)
     ).
 
-% Sin importar la funcion utilizada, la meta siempre se considera al estar atada a la heuristica.
+% Sin importar la funcion utilizada, la meta (Definida de manera dinamica) siempre se considera al estar atada a la heuristica.
 
 
 
+% Recuerde que si desea incorporar mas cajas, debera inicializarlas de manera manual en la base de datos dinamica.
 % Se encarga de resolver el problema. Se recoge La caja azul en h1, y se lleva a h2.
 % Al final, la caja azul y el robot quedan en H2, mientras la caja roja se mantiene en H1.
-% Recoge la caja al inicio, y realiza el recorrido haciendo uso de resolver_heuristica, que mueve al robot haciendo uso de la ruta construida mediante la funcion heuristica.
+% Recoge la caja al inicio, y realiza el recorrido haciendo uso de resolver_heuristica, que mueve al robot de un lugar de inicio a final, haciendo uso de la ruta construida mediante la funcion heuristica.
 resolver(HabitacionIRobot,HabitacionICaja,ColorCaja,HabitacionFCaja,HabitacionFRobot):-
 writeln("Luis Bravo, Camilo Garcia, Fabio Buitrago. Proyecto 1 IIA. Prolog"),
 inicializarPosicion(robot,HabitacionIRobot),
@@ -169,20 +176,20 @@ ubicacion(robot, M),
 writeln("El robot se encuentra incialmente en " +M),
 ubicacion(caja(ColorCaja), L),
 writeln("La caja se encuentra incialmente en " +L),
-resolver_heuristica(h1,HabitacionIRobot, HabitacionICaja),
+resolver_heuristica(HabitacionIRobot, HabitacionICaja),
 recoger(robot, caja(ColorCaja)),
 ubicacion(robot, N),
 writeln("El robot se encuentra en " +N),
 writeln("Caja recogida"),
-resolver_heuristica(HabitacionICaja,HabitacionICaja, HabitacionFCaja),
+resolver_heuristica(HabitacionICaja, HabitacionFCaja),
 soltar(robot, caja(ColorCaja)),
 ubicacion(caja(ColorCaja), O),
 writeln("La caja se encuentra en " +O),
 ubicacion(robot, P),
 writeln("El robot se encuentra en " +P),
 writeln("Caja soltada"),
-resolver_heuristica(HabitacionFCaja,HabitacionFCaja, HabitacionFRobot),
+resolver_heuristica(HabitacionFCaja, HabitacionFRobot),
 ubicacion(caja(ColorCaja), Q),
 writeln("Tras soltar la caja, la ubicacion de la caja es " +Q),
 ubicacion(robot, R),
-writeln("Además, finalmente, el robot se encuentra en la posicion final " +R).
+writeln("Ademas, finalmente, el robot se encuentra en la posicion final " +R).
