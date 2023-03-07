@@ -1,0 +1,36 @@
+Integrantes: Luis Bravo - Camilo Garcia - Fabio Buitrago.
+
+Punto 02: Asignación de los costos. En nuestro caso, el costo está fundamentado por la cantidad de  cajas que se encuentran en cada habitación además
+de la función heurística, la cual es determinada a partir de la distancia de cada uno de los nodos con la meta, representada por la longitud de la lista.
+
+Las funciones actualizadas son:
+
+habitacionDeMinimaHeuristica_Costo y heuristicaYCosto, además de los respectivos llamados de los predicados en el resto del código:
+
+    heuristicaYCosto: Además de calcular el valor del heurística, utilizando la búsqueda en anchura (BFS), también se utilizan las funciones
+    findall y lenght para encontrar la cantidad de cajas de cada color dentro de cada habitación. Este vañpr (Costo) tamien se retorna junto
+    al valor de la heurística (Tam).
+
+    habitacionDeMinimaHeuristica_Costo: Anteriormente se utilizaba keysort para organizar la lista y extraer el valor menor, utilizando Tam como
+    el punto de comparación principal, ahora en vez de utilizar Tam, se realiza una función de selección compuesta que resulta de la suma del Tam 
+    con la cantidad de cajas (costo del mejor camino g(N)), representadas por el Costo retornado por la función descrita anteriormente, logrando
+    así combinar la heurística con la función de costo, implementando así el algoritmo A*, generando los objetivos establecidos dentro del punto 2
+    del proyecto 1 de Introducción a la Inteligencia Artificial.
+
+Instrucciones para la ejecución de cada uno de los programas.
+
+    1a) Desde consola: Teniendo instalado swipl, ejecute en el directorio donde se encuentre el archivo .pl seleccionado swipl SustentacionProyecto.pl
+    1b) Desde la página web: Cargue el archivo seleccionado SustentacionProyecto.pl y ejecute la siguietne query.
+    2)  Comando a utilizar: resolver(h1,h1,h1,h2,h2,h2,h1,h1).
+    3)  Una vez se haya ejecutado el comando en su pantalla podría aparecer un mensaje de True dependiendo de la manera de ejecución, si eso sucede, presione enter.
+    4)  Para realizar la verificación de cada una de las ubicaciones finales de las cajas, además del robot, utilice los siguientes comandos:
+        - ubicacion(robot, L).
+        - ubicacion(caja(verde),L).
+        - ubicacion(caja(azul),L).
+        - ubicacion(caja(roja),L).
+    5) Como podrá validar, la ubicación de cada una de las distintas cajas coinciden, es decir:
+        - Ubicación del robot: h1
+        - Ubicación de la caja verde: h1
+        - Ubicación de la caja azul: h2
+        - Ubicación de la caja roja: h2
+    Y como consecuencia, los resultados coinciden con las especificaciones dadas por la sustentación, además podrá encontrar pantallazos de la ejecución adjuntos.
