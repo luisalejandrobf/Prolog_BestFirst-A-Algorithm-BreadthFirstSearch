@@ -70,7 +70,8 @@ assertz(ubicacion(Caja, UbicacionRobot)).
 
 
 % Heuristica: Cantidad de habitaciones a recorrer antes de llegar al destino.
-heuristica(HabitacionInicial, Solucion, Tam, Costo) :-
+% Costo: Cantidad de cajas dentro de la habitacion de destino.
+heuristicaYCosto(HabitacionInicial, Solucion, Tam, Costo) :-
     busquedaEnAnchura([[HabitacionInicial]], Solucion1),
     reverse(Solucion1, Solucion),
 	length(Solucion1, Tam),
@@ -80,8 +81,8 @@ heuristica(HabitacionInicial, Solucion, Tam, Costo) :-
 	length(CajasAzules, CajasAzulesTam),
 	length(CajasRojas, CajasRojasTam),
 	length(CajasVerdes, CajasVerdesTam),
-	TamTotal is CajasAzulesTam + CajasRojasTam + CajasVerdesTam,
-	writeln("Total de cajas en la habicacion " + HabitacionInicial +  ": " + TamTotal).
+	Costo is CajasAzulesTam + CajasRojasTam + CajasVerdesTam,
+	writeln("Total de cajas en la habicacion " + HabitacionInicial +  ": " + Costo).
 
 % Se realiza la busqueda en anchura del grafo. Por llamada se toma el primer camino de la lista y se extiende para agregar a la lista de caminos sin visitar
 % Recursivamente se llama la funcion con la nueva lista generada, hasta alcanzar el nodo meta.
@@ -111,10 +112,10 @@ extend( Camino, [] ).
 % Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
 % findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
 % keysort se utiliza para ordenar la lista por clave (El valor de la heuristica). Se selecciona la primera habitacion.
-habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom) :-
+habitacionDeMinimaHeuristica_Costo(Habitaciones, HabitacionInicial, Solucion, MinRoom) :-
     findall((Tam+Costo)-Habitacion, (
         member(Habitacion, Habitaciones),
-        heuristica(HabitacionInicial, Solucion, Tam, Costo)
+        heuristicaYCosto(HabitacionInicial, Solucion, Tam, Costo)
     ), ListaHab),
     keysort(ListaHab, [MinValue-MinRoom | _]).
 
@@ -124,20 +125,20 @@ habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom)
 % _ significa "cualquier cosa" en Prolog
 % | Se utiliza para separar la cabeza y cola de la lista. [SiguienteHab, _] Se utiliza para indicar la TUPLA. Una habitacion, seguida de cualquier cosa. En este caso el valor heuristico.
 conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
-    findall([Siguiente, H], (conexion(Habitacion, Siguiente), heuristica(Siguiente, _, H, Costo)), ListaHab),
+    findall([Siguiente, H], (conexion(Habitacion, Siguiente), heuristicaYCosto(Siguiente, _, H, Costo)), ListaHab),
     sort(2, @=<, ListaHab, [[SiguienteHab, _] | _]).
 
 % Se encarga de buscar la habitacion de la minima heuristica, para posteriormente, de manera recursiva, mover el robot habitacion tras habitacion.
 resolver_heuristica(ValorAnterior,Inicio, Fin):-
     retractall(goal(_)),
     assertz(goal(Fin)),
-    habitacionDeMinimaHeuristica([h1,h2], Inicio, Solucion, MinRoom),
+    habitacionDeMinimaHeuristica_Costo([h1,h2], Inicio, Solucion, MinRoom),
     resolver_heuristica_recursivo(MinRoom, Solucion).
 
 resolver_heuristica_recursivo(Habitacion, Solucion) :-
     ubicacion(robot,X),
     goal(W),
-    heuristica(Habitacion, Solucion, Heuristica, Costo),
+    heuristicaYCosto(Habitacion, Solucion, Heuristica, Costo),
     writeln("LA HEURISTICA ES: " + Solucion),
     (W = X ->
         ubicacion(robot,U),
