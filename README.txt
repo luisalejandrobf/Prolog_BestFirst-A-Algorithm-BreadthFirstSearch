@@ -1,6 +1,12 @@
 Luis Bravo, Camilo Garcia, Fabio Buitrago
 Consultas de ejemplo para el proyecto...
 
+
+ProyectoIA.pl -> Proyecto base, con las habitaciones y cajas del enunciado.
+EjemploVariasHabitaciones.pl -> Proyecto base, modificado para incluir mas habitaciones.
+Variación-generalizacionRutas.pl -> Proyecto modificado para generalizar las rutas.
+
+
 Para ejecutar el proyecto, swipl ProyectoIA.pl en el directorio del mismo. Instalar previamente swipl
 
 Para consultar la ubicacion de un objeto: ubicacion(objeto, L). (Objeto debe ser cambiado al nombre del objeto a consultar)
