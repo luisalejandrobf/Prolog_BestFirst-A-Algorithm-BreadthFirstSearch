@@ -97,27 +97,27 @@ goal(h2).
 
 % Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
 % findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
-% keysort se utiliza para ordenar la lista por clave (El valor de la heuristica). Se selecciona la primera habitacion.
-habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom) :-
+% keysort se utiliza para ordenar la lista por clave (El valor de la heuristica). Se selecciona la primera habitacion. Tam-Habitacion Se usa para representar una habitacion y su heuristica. De manera parecida se realiza con MinValue-MinRoom.
+habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, HabMinima) :-
     findall(Tam-Habitacion, (
         member(Habitacion, Habitaciones),
         heuristica(HabitacionInicial, Solucion, Tam)
     ), ListaHab),
-    keysort(ListaHab, [MinValue-MinRoom | _]).
+    keysort(ListaHab, [ValorMinimo-HabMinima | _]).
 
 % Consigue la siguiente habitacion a la cual proceder, segun la heuristica.
 % Se construye ListaHab para generar las soluciones (Tuplas: Habitacion, Heuristica), con findall, esto para las habitaciones siguientes con heuristica H.
 % Se ordena la lista de habitaciones y se selecciona la de menor heuristica en orden ascendente (@=<). Se usa 2, porque la heuristica es el segundo elemento de la tupla.
 % _ significa "cualquier cosa" en Prolog
-% | Se utiliza para separar la cabeza y cola de la lista. [SiguienteHab, _] Se utiliza para indicar la TUPLA. Una habitacion, seguida de cualquier cosa. En este caso el valor heuristico.
+% | Se utiliza para separar la cabeza y cola de la lista, o para definir una tupla. [SiguienteHab, _] Se utiliza para indicar la TUPLA. Una habitacion, seguida de cualquier cosa. En este caso el valor heuristico.
 conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
     findall([Siguiente, H], (conexion(Habitacion, Siguiente), heuristica(Siguiente, _, H)), ListaHab),
     sort(2, @=<, ListaHab, [[SiguienteHab, _] | _]).
 
 % Se encarga de buscar la habitacion de la minima heuristica, para posteriormente, de manera recursiva, mover el robot habitacion tras habitacion.
 resolver_heuristica :-
-    habitacionDeMinimaHeuristica([h1,h2], h1, Solucion, MinRoom),
-    resolver_heuristica_recursivo(MinRoom, Solucion).
+    habitacionDeMinimaHeuristica([h1,h2], h1, Solucion, HabMinima),
+    resolver_heuristica_recursivo(HabMinima, Solucion).
 
 resolver_heuristica_recursivo(Habitacion, Solucion) :-
     heuristica(Habitacion, Solucion, Heuristica),

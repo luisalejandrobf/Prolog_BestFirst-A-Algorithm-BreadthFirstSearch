@@ -118,12 +118,12 @@ extend( Camino, [] ).
 % Regla para encontrar la siguiente habitacion a proceder, segun la heuristica.
 % findall se usa para encontrar todas las posibles soluciones a una consulta y almacenarlas en una lista
 % keysort se utiliza para ordenar la lista por clave (El valor de la heuristica). Se selecciona la primera habitacion.
-habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, MinRoom) :-
+habitacionDeMinimaHeuristica(Habitaciones, HabitacionInicial, Solucion, HabMinima) :-
     findall(Tam-Habitacion, (
         member(Habitacion, Habitaciones),
         heuristica(HabitacionInicial, Solucion, Tam)
     ), ListaHab),
-    keysort(ListaHab, [MinValue-MinRoom | _]).
+    keysort(ListaHab, [ValorMinimo-HabMinima | _]).
 
 % Consigue la siguiente habitacion a la cual proceder, segun la heuristica.
 % Se construye ListaHab para generar las soluciones (Tuplas: Habitacion, Heuristica), con findall, esto para las habitaciones siguientes con heuristica H.
@@ -139,8 +139,8 @@ conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
 resolver_heuristica(Inicio, Fin):-
     retractall(goal(_)),
     assertz(goal(Fin)),
-    habitacionDeMinimaHeuristica([h1,h2,h3,h4,h5,h6,h7], Inicio, Solucion, MinRoom),
-    resolver_heuristica_recursivo(MinRoom, Solucion).
+    habitacionDeMinimaHeuristica([h1,h2,h3,h4,h5,h6,h7], Inicio, Solucion, HabMinima),
+    resolver_heuristica_recursivo(HabMinima, Solucion).
 
 resolver_heuristica_recursivo(Habitacion, Solucion) :-
     ubicacion(robot,X),
