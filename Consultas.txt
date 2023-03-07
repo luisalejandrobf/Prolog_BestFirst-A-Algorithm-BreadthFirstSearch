@@ -21,4 +21,6 @@ Para revisar la ubicacion del robot y las cajas despues de resolver...
 Para correr el programa que hace uso de la heuristica, y se mueve de habitacion en habitacion de forma generalizada,
 utilizar -> resolver.
 
+Con el programa de la variación y generalización de rutas, un ejemplo de uso es: resolver(h1,h1,azul,h5,h5).
+
 En caso de querer hacer mas consultas, poner . despues de true, y posteriormente escribirlas.

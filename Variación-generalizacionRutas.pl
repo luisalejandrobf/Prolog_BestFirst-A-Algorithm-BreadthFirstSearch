@@ -32,11 +32,16 @@ ubicacion_inicial(caja(roja), h1).
 
 
 % Se definen HECHOS DINAMICOS que pueden modificarse en la ejecucion mediante assert y retract.
-% Se utiliza el 2, para indicar que hay 2 argumentos. Ademas, assertz, asserta y retract solo pueden usarse dentro de reglas.
+% Se utiliza el 2, para indicar que hay 2 argumentos. En el caso de que solo sea 1, se usa 1. Ademas, assertz, asserta y retract solo pueden usarse dentro de reglas.
 % Sin embargo, se pueden inicializar datos.
 :- dynamic ubicacion/2.
+ubicacion(robot, h1).
+ubicacion(caja(azul), h1).
+ubicacion(caja(roja), h1).
 
 :- dynamic goal/1.
+
+
 
 % DEFINICION DE REGLAS
 
@@ -130,6 +135,7 @@ conseguirSiguienteHabitacion(Habitacion, SiguienteHab) :-
     sort(2, @=<, ListaHab, [[SiguienteHab, _] | _]).
 
 % Se encarga de buscar la habitacion de la minima heuristica, para posteriormente, de manera recursiva, mover el robot habitacion tras habitacion.
+% El codigo se ejecuta de manera recursiva hasta que la meta es alcanzada.
 resolver_heuristica(ValorAnterior,Inicio, Fin):-
     retractall(goal(_)),
     assertz(goal(Fin)),
@@ -140,7 +146,7 @@ resolver_heuristica_recursivo(Habitacion, Solucion) :-
     ubicacion(robot,X),
     goal(W),
     heuristica(Habitacion, Solucion, Heuristica),
-    writeln("LA HEURISTICA ES: " + Solucion),
+    writeln("LA RUTA SIGUIENDO LA HEURISTICA ES: " + Solucion),
     (W = X ->
         ubicacion(robot,U),
         writeln("Llegamos al destino! " + U),
@@ -154,10 +160,11 @@ resolver_heuristica_recursivo(Habitacion, Solucion) :-
         resolver_heuristica_recursivo(SiguienteHab, SolucionAux)
     ).
 
-% Sin importar la funcion utilizada, la meta siempre se considera al estar atada a la heuristica.
+% Sin importar la funcion utilizada, la meta (Definida de manera dinamica) siempre se considera al estar atada a la heuristica.
 
 
 
+% Recuerde que si desea incorporar mas cajas, debera inicializarlas de manera manual en la base de datos dinamica.
 % Se encarga de resolver el problema. Se recoge La caja azul en h1, y se lleva a h2.
 % Al final, la caja azul y el robot quedan en H2, mientras la caja roja se mantiene en H1.
 % Recoge la caja al inicio, y realiza el recorrido haciendo uso de resolver_heuristica, que mueve al robot haciendo uso de la ruta construida mediante la funcion heuristica.
@@ -185,4 +192,4 @@ resolver_heuristica(HabitacionFCaja,HabitacionFCaja, HabitacionFRobot),
 ubicacion(caja(ColorCaja), Q),
 writeln("Tras soltar la caja, la ubicacion de la caja es " +Q),
 ubicacion(robot, R),
-writeln("Además, finalmente, el robot se encuentra en la posicion final " +R).
+writeln("Ademas, finalmente, el robot se encuentra en la posicion final " +R).
