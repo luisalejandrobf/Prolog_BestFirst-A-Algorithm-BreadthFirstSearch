@@ -1,4 +1,38 @@
 Luis Bravo, Camilo Garcia, Fabio Buitrago
+
+##ENG...
+Sample queries for the project...
+
+To run the program... resolver(h1,h1,h1,h2,h2,h2,h1,h1).
+
+ProyectoIA.pl -> Base project, with the rooms and boxes from the statement.
+EjemploVariasHabitaciones.pl -> Base project, modified to include more rooms.
+Variación-generalizacionRutas.pl -> Project modified to generalize the routes.
+
+To execute the project, run swipl ProyectoIA.pl (or change depending on the project) in the project directory. Install swipl beforehand.
+
+To query the location of an object: ubicacion(object, L). (Object should be changed to the name of the object to query)
+For example, to perform the necessary movements to move the boxes and leave them in the desired order...
+-> mover(caja(azul), h1, h2).
+-> mover(robot, h1, h2).
+
+To pick up a box using the robot (can only have one at a time): recoger(robot, caja(azul)).
+To drop the box, use the soltar command: soltar(robot, caja(azul)).
+Regardless of the movements performed by the robot, the location of the box will match after dropping it.
+
+To test the resolution method -> resolver. (Except for generalization and justification)
+To check the location of the robot and boxes after resolving...
+-> ubicacion(robot, L).
+-> ubicacion(caja(azul), L).
+-> ubicacion(caja(roja), L).
+
+To run the program that uses heuristics and moves from room to room in a generalized way, use -> resolver.
+
+For the variation and generalization of routes program, an example of use is: resolver(h1,h1,azul,h5,h5).
+
+If you want to perform more queries, type . after true (or press enter), and then write them.
+
+##ESP...
 Consultas de ejemplo para el proyecto...
 
 Para correr la el programa... resolver(h1,h1,h1,h2,h2,h2,h1,h1).
