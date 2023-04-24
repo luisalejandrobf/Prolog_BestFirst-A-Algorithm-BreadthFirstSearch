@@ -1,9 +1,7 @@
 Luis Bravo, Camilo Garcia, Fabio Buitrago
 Consultas de ejemplo para el proyecto...
 
-Para correr la sustentacion... resolver(h1,h1,h1,h2,h2,h2,h1,h1).
-
-
+Para correr la el programa... resolver(h1,h1,h1,h2,h2,h2,h1,h1).
 
 ProyectoIA.pl -> Proyecto base, con las habitaciones y cajas del enunciado.
 EjemploVariasHabitaciones.pl -> Proyecto base, modificado para incluir mas habitaciones.
@@ -31,4 +29,4 @@ utilizar -> resolver.
 
 Con el programa de la variación y generalización de rutas, un ejemplo de uso es: resolver(h1,h1,azul,h5,h5).
 
-En caso de querer hacer mas consultas, poner . despues de true, y posteriormente escribirlas.
+En caso de querer realizar mas consultas, escribir . despues de true (o seleccionar enter), y posteriormente escribirlas.
