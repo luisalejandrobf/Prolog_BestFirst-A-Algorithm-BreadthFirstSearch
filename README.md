@@ -10,9 +10,16 @@ This repository contains the implementation of the Best First/A* algorithm and B
 
 The repository includes the following files:
 
-- `ProyectoIA.pl`: Base project, containing the rooms and boxes specified in the project statement.
-- `EjemploVariasHabitaciones.pl`: Base project modified to include additional rooms.
+In the `ProjectContents` folder, you will find:
+- `Proyecto IIA.pdf`: Documentation explaining the functioning of the heuristic used, calculations, and the overall code implementation.
+- `ProyectoIA.pl`: Base project containing the specified rooms and boxes as mentioned in the project statement.
+- `EjemploVariasHabitaciones.pl`: Modified base project to include additional rooms.
 - `Variación-generalizacionRutas.pl`: Project modified to generalize the routes.
+
+In the `Sustentation` folder, you will find:
+- Images of the algorithm execution and different tests.
+- `Instructions_Presentation.txt`: Instructions for the specific execution of the code during the presentation.
+- `SustentationProject.pl`: Project modified to include the A* algorithm in the base project and generalized.
 
 Feel free to explore the code in these files to understand the implementation of the algorithms.
 
@@ -59,9 +66,16 @@ Este repositorio contiene la implementación del algoritmo Best First/A* y el al
 
 El repositorio incluye los siguientes archivos:
 
+En la carpeta `ProjectContents`, podrá encontrar:
+- `Proyuecto IIA.pdf`: Funcionamiento de la heurística utilizada y cálculos, además del funcionamiento general del código.
 - `ProyectoIA.pl`: Proyecto base que contiene las habitaciones y cajas especificadas en el enunciado del proyecto.
 - `EjemploVariasHabitaciones.pl`: Proyecto base modificado para incluir habitaciones adicionales.
 - `Variación-generalizacionRutas.pl`: Proyecto modificado para generalizar las rutas.
+
+En la carpeta `Sustentation` podrá encontrar:
+- Imágenes de la corrida del algoritmo y distintas pruebas.
+- `Instrucciones_Sustentación.txt`: Instrucciones para la corrida específica de la sustentación realizada del código.
+- `SustentacionProyecto.pl`: Proyecto Modificado para incluir el algoritmo A* en el proyecto base y generalizado.
 
 Siéntete libre de explorar el código de estos archivos para comprender la implementación de los algoritmos.
 
