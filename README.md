@@ -1,6 +1,6 @@
 # Best First/A* Algorithm, Breadth-first Search
 
-![Visitor Badge](https://visitor-badge.feriirawann.repl.co?username=luisalejandrobf&repo=Prolog_BestFirst-A-Algorithm-BreadthFirstSearch&label=Welcome%20to%20the%20repository!%20You're%20visitor%20number&style=flat-square&color=%233864CF&contentType=svg)
+![Visitor badge](https://visitor-badge.laobi.icu/badge?page_id=luisalejandrobf.Prolog_BestFirst-A-Algorithm-BreadthFirstSearch&left_text=Views)
 
 [English](#best-firsta-algorithm-breadth-first-search) | [Español](#algoritmo-best-firsta-búsqueda-en-anchura)
 
